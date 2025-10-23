@@ -1,0 +1,8 @@
+# Readable Streams
+  - Importação de clientes via csv (Excel)
+  - Sem o uso de streams, o node vai ler todo o arquivo de 1gb por exemplo, e só depois vai começar
+    a fazer os tratamentos e etc. Com streams, nos primeiros segundos que for recebendo partes do
+    arquivo de 1gb, o node ja vai processando o que ele conseguir receber.
+
+# Writable Streams
+  - Exemplo como Netflix & Spotify onde o frontend vai lendo os dados aos poucos
