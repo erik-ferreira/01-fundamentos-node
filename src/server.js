@@ -2,6 +2,7 @@ import http from "http"
 
 const server = http.createServer((req, res) => {
   const { method, url } = req
+  console.log("method")
 
   if (method === "GET" && url === "/users") {
     return res.end("Listagem de usuários")
