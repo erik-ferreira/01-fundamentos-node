@@ -1,4 +1,4 @@
-import { Readable } from "node:stream"
+import { Readable, Transform, Writable } from "node:stream"
 
 class OneToHundredStream extends Readable {
   index = 1
@@ -8,7 +8,7 @@ class OneToHundredStream extends Readable {
 
     setTimeout(() => {
       if (i > 100) {
-        // O this.push server para enviar partes das informações, só que colocando
+        // O this.push serve para enviar partes das informações, só que colocando
         // null ele vai para a stream
         this.push(null)
       } else {
@@ -22,4 +22,29 @@ class OneToHundredStream extends Readable {
   }
 }
 
-new OneToHundredStream().pipe(process.stdout)
+class InverseNumberStream extends Transform {
+  _transform(chunk, encoding, callback) {
+    const transformed = Number(chunk.toString()) * -1
+
+    // O primeiro parâmetro do callback é um erro(new Error('')), porem posso enviar como null para
+    // informar que não deu erro nenhum
+    callback(null, Buffer.from(String(transformed)))
+  }
+}
+
+class MultiplyByTenStream extends Writable {
+  // chunk é o pedaço que foi lido da stream de leitura
+  // encoding é como a informação esta codificada
+  // callback é uma função que a stream de escrita precisa chamar quando ela terminar de executar
+  // Detalhe que em uma stream de escrita não se retorna nada, ela processa um dado, e não
+  // transforma em alguma outra coisa
+  _write(chunk, encoding, callback) {
+    console.log(Number(chunk.toString()) * 10)
+    callback()
+  }
+}
+
+// process.stdout
+new OneToHundredStream()
+  .pipe(new InverseNumberStream())
+  .pipe(new MultiplyByTenStream())

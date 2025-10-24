@@ -6,3 +6,9 @@
 
 # Writable Streams
   - Exemplo como Netflix & Spotify onde o frontend vai lendo os dados aos poucos
+
+# Transform Streams
+  - Obrigatoriamente vai ler os dados de algum lugar, e vai escrever dados em outro lugar
+
+# Duplex Streams
+  - Pode fazer tanto leitura quanto escrita de uma stream. Exemplo de um arquivo interno do pc, pode ser lido e escrito algo, mas não necessariamente transformar esse dado
