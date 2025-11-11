@@ -1,5 +1,7 @@
 import http from "http"
 
+import { routes } from "./routes.js"
+
 import { Database } from "./database.js"
 
 import { json } from "./middlewares/json.js"
@@ -11,23 +13,15 @@ const server = http.createServer(async (req, res) => {
 
   await json(req, res)
 
-  if (method === "GET" && url === "/users") {
-    const users = database.select("users")
+  const route = routes.find((route) => {
+    return route.method === method && route.path === url
+  })
 
-    return res.end(JSON.stringify(users))
+  if (route) {
+    return route.handler(req, res)
   }
 
-  if (method === "POST" && url === "/users") {
-    const { name, email } = req.body
-
-    const user = { id: 1, name, email }
-
-    database.insert("users", user)
-
-    return res.writeHead(201).end("Criação de um usuário")
-  }
-
-  return res.end("Hello World")
+  return res.writeHead(404).end()
 })
 
 server.listen(3333)
