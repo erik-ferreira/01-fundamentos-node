@@ -6,6 +6,8 @@ import { Database } from "./database.js"
 
 import { json } from "./middlewares/json.js"
 
+import { extractQueryParams } from "./utils/extract-query-params.js"
+
 const database = new Database()
 
 const server = http.createServer(async (req, res) => {
@@ -20,7 +22,10 @@ const server = http.createServer(async (req, res) => {
   if (route) {
     const routeParams = req.url.match(route.path)
 
-    req.params = { ...routeParams.groups }
+    const { query, ...params } = routeParams.groups
+
+    req.params = params
+    req.query = query ? extractQueryParams(query) : {}
 
     return route.handler(req, res)
   }
