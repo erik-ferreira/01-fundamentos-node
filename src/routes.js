@@ -1,8 +1,8 @@
 import { randomUUID } from "crypto"
 
-import { Database } from "./database"
+import { Database } from "./database.js"
 
-import { buildRouteParams } from "./utils/build-route-params"
+import { buildRouteParams } from "./utils/build-route-params.js"
 
 const database = new Database()
 
@@ -30,16 +30,26 @@ export const routes = [
     },
   },
   {
+    method: "PUT",
+    path: buildRouteParams("/users/:id"),
+    handler: (req, res) => {
+      const { id } = req.params
+      const { name, email } = req.body
+
+      database.update("users", id, { name, email })
+
+      return res.writeHead(204).end()
+    },
+  },
+  {
     method: "DELETE",
     path: buildRouteParams("/users/:id"),
     handler: (req, res) => {
-      const { name, email } = req.body
+      const { id } = req.params
 
-      const user = { id: randomUUID(), name, email }
+      database.delete("users", id)
 
-      database.insert("users", user)
-
-      return res.writeHead(201).end()
+      return res.writeHead(204).end()
     },
   },
 ]
